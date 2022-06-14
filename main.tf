@@ -79,17 +79,18 @@ resource "aws_security_group" "db-access" {
   }
 }
 
-resource "aws_instance" "backend" {
-  ami           = "ami-005de95e8ff495156"
+module "customers" {
+  source = "./modules/ec2-db"
+  instance_ami = "ami-005de95e8ff495156"
   instance_type = "t2.micro"
-  key_name = "terraform"
+  instance_key = "terraform"
 
-  vpc_security_group_ids = [
+  instance_security_group = [
     aws_security_group.ssh-access.id,
     aws_security_group.backend-access.id
   ]
 
-  tags = {
+  instance_tags = {
     Name = "terraform-docker-backend"
   }
 }
